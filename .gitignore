@@ -1,0 +1,6 @@
+# Default ignored files
+.idea/
+.ipynb_checkpoints/
+.vscode/
+data/
+*.csv
