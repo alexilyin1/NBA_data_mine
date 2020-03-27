@@ -20,6 +20,7 @@ def homepage_layout():
         html.Hr(className='my-2'),
         html.P(children=[
             dbc.Button(html.A('Visualization Tools', href='#')),
+            ' ',
             dbc.Button(html.A('Analytics Tools', href='#'))
         ])
         ], fluid=True

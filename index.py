@@ -1,17 +1,19 @@
-import plotly.express as px
-import plotly.graph_objects as go
-import plotly.figure_factory as ff
-import flask
 import dash
-import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_table
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 
-import os 
+import os
 import pandas as pd
 import Levenshtein as lv
+import plotly.graph_objects as go
+
+from homepage import create_homepage
+from viz import create_app
+
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.config.suppress_callback_exceptions = True
 
 csv_list = []
 for files in os.listdir('data/'):
@@ -35,65 +37,10 @@ stats_columns = ['Points', 'Field Goals', 'Field Goals Attempted',
                  'Total Rebound', 'Assists', 'Steals', 'Blocks', 'Turnovers',
                  'Personal Fouls']
 
-server = flask.Flask(__name__)
-app = dash.Dash(__name__, 
-                server=server, 
-                external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-
-
-
-
-
-
-app.layout = html.Div(children=[
-    '''
-    dbc.Alert(
-        'You have entered an invalid player name, please try again',
-        id='player_alert',
-        dismissable=True,
-        fade=True,
-        is_open=False,
-        color='danger'
-    ),
-    ''',
-
-    html.Div([
-        dbc.Input(id='text_input', placeholder='Enter a player name'),
-        html.Button(id='submit-button', n_clicks=0, children='Submit'),
-        dbc.Select(
-            id='stats_dropdown',
-            options=[{'label': stat, 'value': stat} for stat in stats_columns]
-        )]
-    ),
-
-    html.Br(),
-
-    dash_table.DataTable(
-        id='player_stats',
-        columns= [{'name': i, 'id': i} for i in (col_names)],
-        style_table={'overflowX': 'scroll'}
-    ),
-
-    html.Br(),
-
-    dcc.Graph(
-        id='player_plot'
-    )
-             # style=dict(display='flex', justifyContent='center'))
+app.layout = html.Div([
+    dcc.Location(id='url'),
+    html.Div(id='page-content')
 ])
-
-'''
-@app.callback(
-    Output('player_alert', 'is_open'),
-    [Input('text_input', 'value')],
-    [State('player_alert', 'is_open')]
-)
-def toggle_player_alert(text_input, is_open):
-    if str(text_input) not in combined_csv['Name'].values:
-        return is_open
-    return not is_open
-'''
 
 @app.callback(
     Output('player_stats', 'data'),
@@ -101,6 +48,7 @@ def toggle_player_alert(text_input, is_open):
     [State('text_input', 'value')]
 )
 def stats_table(n_clicks, text):
+    text = " ".join([str.capitalize() for str in text.split(' ')])
     filt_df = combined_csv[combined_csv['Name'] == text]
     if len(filt_df) > 0 and n_clicks:
         return filt_df.to_dict('rows')
@@ -114,6 +62,7 @@ def stats_table(n_clicks, text):
      Input('stats_dropdown', 'value')]
 )
 def player_graph(text_input, stats_dropdown):
+    text_input = " ".join([str.capitalize() for str in text_input.split(' ')])
     filt_df = combined_csv[combined_csv['Name'] == text_input]
     stats = filt_df.loc[:, ['Season', str(stats_dropdown)]]
     if text_input in combined_csv['Name'].values:
@@ -149,5 +98,18 @@ def player_graph(text_input, stats_dropdown):
             }
 
 
+@app.callback(
+    Output('page-content', 'children'),
+    [Input('url', 'pathname')]
+)
+def display_page(pathname):
+    if pathname == '/viz':
+        return create_app()
+    elif pathname == '/analytics':
+        return ''
+    elif pathname == '/home':
+        return create_homepage()
+
+
 if __name__ == '__main__':
-    app.server.run(threaded=False)
+    app.server.run()
