@@ -1,6 +1,7 @@
 import flask
 import dash
 import dash_html_components as html
+import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 
 from navbar import create_navbar
@@ -18,11 +19,21 @@ def homepage_layout():
             html.A('Github Link', href='https://github.com/alexilyin1')],
             className='lead'),
         html.Hr(className='my-2'),
+        html.P(
+            dbc.Button('Press Here to Scrape',
+                       id='scrape_button')
+        ),
+        html.Div(children=[
+            dcc.Interval(id='progress-interval', n_intervals=59, interval=5),
+            dbc.Progress(id='progress')
+        ]),
+        html.Hr(className='my-2'),
         html.P(children=[
-            dbc.Button(html.A('Visualization Tools', href='#')),
+            dbc.Button(html.A('Visualization Tools', href='/viz')),
             ' ',
-            dbc.Button(html.A('Analytics Tools', href='#'))
-        ])
+            dbc.Button(html.A('Analytics Tools', href='/analytics'))
+        ]),
+        html.P(id='temp')
         ], fluid=True
     )
 

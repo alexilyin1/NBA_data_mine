@@ -113,27 +113,28 @@ def league_scraper():
     df.apply(pd.to_numeric, errors='ignore')
     df.astype({'Position': str, 'Team': str})
 
-    file_str = 'data/' + which_season + '_player_stats.csv'
+    file_str = 'static/' + which_season + '_player_stats.csv'
     df.to_csv(file_str, index=False)
 
 
-which_stats = input('Would you like to search for invidivual player stats (i) or league wide stats (l): ')
-if which_stats == 'i':
+# which_stats = input('Would you like to search for invidivual player stats (i) or league wide stats (l): ')
+# if which_stats == 'i':
     # individual_stat_scaper(individual_url)
     # stat_lookup()
-elif which_stats == 'l':
-    which_season = input('Enter the starting season for the data collection (i.e. 1950-1951): ')
-    split_years = which_season.split('-')
-    year1 = int(split_years[0])
-    year2 = int(split_years[1])
-    while year1 < 2019 and year2 < 2020:
-        which_season = str(year1) + '-' + str(year2)
-        player_names_list = []
-        player_stats_list = []
-        player_stats_fixed = []
-        league_scraper()
-        player_names_list = []
-        player_stats_list = []
-        player_stats_fixed = []
-        year1 = year1 + 1
-        year2 = year2 + 1
+# elif which_stats == 'l':
+    # which_season = input('Enter the starting season for the data collection (i.e. 1950-1951): ')
+    # split_years = which_season.split('-')
+year1 = 1960
+year2 = 1961
+while year1 < 2019 and year2 < 2020:
+    which_season = str(year1) + '-' + str(year2)
+    player_names_list = []
+    player_stats_list = []
+    player_stats_fixed = []
+    league_scraper()
+    player_names_list = []
+    player_stats_list = []
+    player_stats_fixed = []
+    year1 = year1 + 1
+    year2 = year2 + 1
+

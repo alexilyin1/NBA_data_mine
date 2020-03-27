@@ -1,9 +1,11 @@
+import flask
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
+import time
 import os
 import pandas as pd
 import Levenshtein as lv
@@ -11,6 +13,7 @@ import plotly.graph_objects as go
 
 from homepage import create_homepage
 from viz import create_app
+from watch import on_created, create_handler, create_observer
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config.suppress_callback_exceptions = True
@@ -41,6 +44,42 @@ app.layout = html.Div([
     dcc.Location(id='url'),
     html.Div(id='page-content')
 ])
+
+
+@app.callback(
+    [Output('progress', 'value'), Output('progress', 'children')],
+    [Input('progress-interval', 'n_intervals'),
+     Input('scrape_button', 'n_clicks')]
+)
+def update_progress(intervals, n):
+    if n == 0:
+        return 0, f'{0}%'
+    else:
+        for file in os.listdir('static/'):
+            os.remove('static/' + file)
+
+        handler = create_handler()
+        observer = create_observer('static/', handler)
+
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+            observer.join()
+        return 100, f'{100}%'
+
+
+@app.callback(
+    Output('temp', 'value'),
+    [Input('scrape_button', 'n_clicks')]
+)
+def start_scrape(n):
+    if n == 0:
+        return 0
+    return os.system('py scraper.py')
+
 
 @app.callback(
     Output('player_stats', 'data'),
@@ -107,7 +146,7 @@ def display_page(pathname):
         return create_app()
     elif pathname == '/analytics':
         return ''
-    elif pathname == '/home':
+    elif pathname == '/':
         return create_homepage()
 
 

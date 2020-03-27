@@ -7,7 +7,7 @@ def create_navbar():
     navbar = dbc.NavbarSimple(children=[
         dbc.Row([
             dbc.Col(html.Img(src=nba_logo, height='20px')),
-            dbc.Col(dbc.NavbarBrand(html.A('Home', href='/home'), className='ml-2'))
+            dbc.Col(dbc.NavbarBrand(html.A('Home', href='/'), className='ml-2'))
         ],
             align='center',
             style={'position': 'absolute',
