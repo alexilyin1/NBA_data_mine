@@ -35,7 +35,20 @@ Pressing the scrape button causes the scraping script to run in the background a
 
 ![alt_text](images/homepage.PNG)
 
-The homepage of the dashboard contains links to the different pages of the app, which can also be accesses using the navbar located at the top of the screen. An interesting note about the structure of the dashboard is the navbar.py file. While the navbar had its own dedicated file, it had to be called on every page of the app. The first feature of this dashboard is the ability to look at a single player's stats. For example, here are Michael Jordan's stats over his career:
+The homepage of the dashboard contains links to the different pages of the app, which can also be accesses using the navbar located at the top of the screen. An interesting note about the structure of the dashboard is the navbar.py file. While the navbar had its own dedicated file, it had to be called on every page of the app. The first feature of this dashboard is the ability to look at a single player's stats. This page displays all the career average for all NBA players on the Basketball Reference site, and allows for the visualization of any of the stats. One thing to note is that some players appear more than once in a season table. The reason for this is trades or free agency signings. A player can start the year playing for one team, before being traded or being released/signing for another team. Players who fit this criteria have stacked data points in these seasons. For example, here are Michael Jordan's stats over his career as a table, as well as a line plot of his points-per-game averages:
 
 
 ![alt_text](images/player_viz.PNG)
+
+Next was the player comparison tool, which allows for the comparison of players by a chosen statistic. Due to concerns of cluttering, the stats table has been witheld from this page. 
+
+
+![alt_text](images/pcomp.PNG)
+
+
+## Challenges
+The method of data collection proved to be the biggest challenge in this app. I spent an unproportionate amount of time writing the scraping script relative to the amount of data that was collected in the end. The reason for this is various quirks in the Basketball Reference source code that confused BeautifulSoup and Selenium. Note, the script may not work if there are any updates to Basketball Reference, which is possible due to the sheer volume of scraping tools available online. 
+
+
+## Future Work
+There is one tab that I have yet to address: analytics. The intial goal of the project was to use predictive analytics on basketball data, but this dashboard was created as a tangent from the original path of this project. My future work will involve adding interactive predictive analytics features to the dashboard, and should allow for users to gain insights from the vast amount of data available on Basketball Reference. With the prevelance of analytics growing in the NBA, predictive analytics can be used by teams to get an upper hand over their competition. 
