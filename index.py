@@ -10,6 +10,9 @@ import os
 import pandas as pd
 import Levenshtein as lv
 import plotly.graph_objects as go
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
+
 
 from homepage import create_homepage
 from viz import create_app
@@ -46,29 +49,45 @@ app.layout = html.Div([
 ])
 
 
+def on_created(event):
+    length = len(os.listdir('static/'))
+    perc = int(length/59) * 100
+    return perc, f'{perc}%'
+
+
 @app.callback(
     [Output('progress', 'value'), Output('progress', 'children')],
     [Input('progress-interval', 'n_intervals'),
-     Input('scrape_button', 'n_clicks')]
+     Input('scrape_button', 'n_clicks'),
+     Input('url', 'pathname')]
 )
-def update_progress(intervals, n):
+def update_progress(intervals, n, pathname):
     if n == 0:
         return 0, f'{0}%'
     else:
         for file in os.listdir('static/'):
             os.remove('static/' + file)
 
-        handler = create_handler()
-        observer = create_observer('static/', handler)
+        patterns = '*.csv'
+        ignore_patterns = ""
+        ignore_directories = False
+        case_sensitive = True
+        event_handler = PatternMatchingEventHandler(patterns, ignore_patterns,
+                                                    ignore_directories, case_sensitive)
+        event_handler.on_created = on_created
+        path = 'static/'
+        go_recursively = True
+        observer = Observer()
+        observer.schedule(event_handler, path, recursive=go_recursively)
 
         observer.start()
         try:
             while True:
                 time.sleep(1)
-        except KeyboardInterrupt:
+        except pathname != '/':
             observer.stop()
             observer.join()
-        return 100, f'{100}%'
+
 
 
 @app.callback(
