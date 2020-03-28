@@ -12,10 +12,15 @@ My data collection method involved the use of a BeautifulSoup/Selenium to visit 
 While this wans't my first exposure to Dash, it was my first time trying to create a multi-paged dashboard. Since there were a couple of different tasks I was hoping to accomplish, trying to fit everything on one page would create a cluttered mess. Creating a multi-paged dashboard is not as easy as it may seem, and involves splitting source code over a collection of different files. The structure of this app is as follows:
 
 -- scraper.py
+
 -- Index.py
+
 ---- navbar.py
+
 ---- homepage.py
+
 ---- player_viz.py
+
 ---- pcomp.py
 
 
