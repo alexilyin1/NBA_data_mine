@@ -40,7 +40,7 @@ The homepage of the dashboard contains links to the different pages of the app, 
 
 ![alt_text](images/player_viz.PNG)
 
-Next was the player comparison tool, which allows for the comparison of players by a chosen statistic. Due to concerns of cluttering, the stats table has been witheld from this page. 
+Next was the player comparison tool, which allows for the comparison of players by a chosen statistic. Due to concerns of cluttering, the stats table has been witheld from this page. Here is a comparison of the effective field goal percentage (eFG%) between Paul Pierce and the late Kobe Bryant, two NBA superstars who faced off many times over their nba careers. As you can see, while Paul Pierce had higher peaks than Kobe, Kobe had greater consitency over his legendary career:
 
 
 ![alt_text](images/pcomp.PNG)
