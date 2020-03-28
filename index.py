@@ -13,10 +13,9 @@ import plotly.graph_objects as go
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 
-
 from homepage import create_homepage
 from viz import create_app
-from watch import on_created, create_handler, create_observer
+from pcomp import create_pcomp
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config.suppress_callback_exceptions = True
@@ -156,6 +155,92 @@ def player_graph(text_input, stats_dropdown):
             }
 
 
+### Player Comp Callbacks
+## Player 1
+@app.callback(
+    Output('player1_plot', 'figure'),
+    [Input('comp1_input', 'value'),
+     Input('comp_dropdown', 'value')]
+)
+def player_graph(text_input, stats_dropdown):
+    text_input = " ".join([str.capitalize() for str in text_input.split(' ')])
+    filt_df = combined_csv[combined_csv['Name'] == text_input]
+    stats = filt_df.loc[:, ['Season', str(stats_dropdown)]]
+    if text_input in combined_csv['Name'].values:
+        return go.Figure([go.Scatter(x=stats['Season'], y=stats[stats_dropdown])])
+    elif text_input is None or len(stats)==0:
+        lev_dict = {'Name': [],
+                    'Score': []}
+        for x in set(list(combined_csv['Name'].values)):
+            lev_dict['Name'].append(x)
+            lev_dict['Score'].append(lv.distance(text_input, x))
+        lev_df = pd.DataFrame.from_dict(lev_dict)
+        top = lev_df.sort_values('Score', ascending=True).iloc[0:5,]['Name'].values
+        return {
+                "layout": {
+                    "xaxis": {
+                        "visible": False
+                    },
+                    "yaxis": {
+                        "visible": False
+                    },
+                    "annotations": [
+                        {
+                            "text": "Player not Found, did you mean {}".format([Name for Name in top]),
+                            "xref": "paper",
+                            "yref": "paper",
+                            "showarrow": False,
+                            "font": {
+                                "size": 10
+                            }
+                        }
+                    ]
+                }
+            }
+
+## Player 2
+@app.callback(
+    Output('player2_plot', 'figure'),
+    [Input('comp2_input', 'value'),
+     Input('comp_dropdown', 'value')]
+)
+def player_graph(text_input, stats_dropdown):
+    text_input = " ".join([str.capitalize() for str in text_input.split(' ')])
+    filt_df = combined_csv[combined_csv['Name'] == text_input]
+    stats = filt_df.loc[:, ['Season', str(stats_dropdown)]]
+    if text_input in combined_csv['Name'].values:
+        return go.Figure([go.Scatter(x=stats['Season'], y=stats[stats_dropdown])])
+    elif text_input is None or len(stats)==0:
+        lev_dict = {'Name': [],
+                    'Score': []}
+        for x in set(list(combined_csv['Name'].values)):
+            lev_dict['Name'].append(x)
+            lev_dict['Score'].append(lv.distance(text_input, x))
+        lev_df = pd.DataFrame.from_dict(lev_dict)
+        top = lev_df.sort_values('Score', ascending=True).iloc[0:5,]['Name'].values
+        return {
+                "layout": {
+                    "xaxis": {
+                        "visible": False
+                    },
+                    "yaxis": {
+                        "visible": False
+                    },
+                    "annotations": [
+                        {
+                            "text": "Player not Found, did you mean {}".format([Name for Name in top]),
+                            "xref": "paper",
+                            "yref": "paper",
+                            "showarrow": False,
+                            "font": {
+                                "size": 10
+                            }
+                        }
+                    ]
+                }
+            }
+
+
 @app.callback(
     Output('page-content', 'children'),
     [Input('url', 'pathname')]
@@ -163,6 +248,8 @@ def player_graph(text_input, stats_dropdown):
 def display_page(pathname):
     if pathname == '/viz':
         return create_app()
+    elif pathname == '/pcomp':
+        return create_pcomp()
     elif pathname == '/analytics':
         return ''
     elif pathname == '/':

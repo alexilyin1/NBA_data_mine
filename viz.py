@@ -77,6 +77,7 @@ def create_app():
 
     return layout
 
+
 app.layout = create_app()
 
 

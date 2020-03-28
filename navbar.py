@@ -17,6 +17,8 @@ def create_navbar():
         dbc.Row([
             dbc.Col(dbc.NavItem(dbc.NavLink('Visualizations', href='/viz')), className='ml-2',
                     style={'height': '37px'}),
+            dbc.Col(dbc.NavItem(dbc.NavLink('Comparisons', href='/pcomp')), className='ml-2',
+                    style={'height': '37px'}),
             dbc.Col(dbc.NavItem(dbc.NavLink('Analytics', href='/analytics')), className='ml-2',
                     style={'height': '37px'})
         ],

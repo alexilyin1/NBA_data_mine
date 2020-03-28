@@ -31,6 +31,8 @@ def homepage_layout():
         html.P(children=[
             dbc.Button(html.A('Visualization Tools', href='/viz')),
             ' ',
+            dbc.Button(html.A('Player Comparison', href='/pcomp')),
+            ' ',
             dbc.Button(html.A('Analytics Tools', href='/analytics'))
         ]),
         html.P(id='temp')
